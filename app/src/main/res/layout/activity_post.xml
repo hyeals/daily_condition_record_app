@@ -7,6 +7,10 @@
     tools:context=".PostActivity"
     android:orientation="vertical">
 
+    <include layout="@layout/toolbar"
+        android:id="@+id/toolbar">
+    </include>
+
     <TextView
         android:id="@+id/weather"
         android:layout_width="match_parent"
