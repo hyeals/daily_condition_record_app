@@ -4,8 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".PostActivity"
+    android:orientation="vertical">
 
-
+    <TextView
+        android:id="@+id/weather"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="GET weather"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 </LinearLayout>
