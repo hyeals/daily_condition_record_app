@@ -14,6 +14,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -116,7 +120,43 @@ public class PostActivity extends AppCompatActivity {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
-            return sb.toString();
+
+            //-------------------- 기상청 JSON 데이터 파싱 시작 -----------------------
+            // PTY: 강수형태 fcstValue: PTY값
+            // root(json 전체 데이터 객체) -> response 객체 -> body 객체 -> items 객체 -> item 리스트 -> category: "PTY" -> fcstValue: "value~~"
+            JSONObject root = null;
+            JSONObject parse_response = null;
+            JSONObject parse_body = null;
+            JSONObject parse_items = null;
+            JSONArray parse_item = null;
+            JSONObject data = null;
+            String category = null;
+            String fcstValue = null;
+            try {
+                root = new JSONObject(sb.toString());
+                parse_response = root.getJSONObject("response");
+                parse_body = parse_response.getJSONObject("body");
+                parse_items = parse_body.getJSONObject("items");
+                parse_item = parse_items.getJSONArray("item");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+// item 리스트에서 PTY 데이터 가져오기
+            for(int i=0; i<100; i++) {
+                try {
+                    data = parse_item.getJSONObject(i);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    category = data.getString("category");
+                    fcstValue = data.getString("fcstValue");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if (category.equals("PTY")) break;
+            }
+            return "category: " + category + " " + "fcstValue: " + fcstValue;
         }
 
         @Override
