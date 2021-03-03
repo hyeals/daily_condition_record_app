@@ -2,13 +2,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.test.daily_condition_record">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Daily_condition_record">
+        android:theme="@style/Theme.Daily_condition_record"
+        android:usesCleartextTraffic="true">
+        <!--http 사용할 수 있도록 허용 - 기상청 공공데이터는 http로 만들어져 있는데 안드로이드 9부터 https 대신 http를 사용하면 컴파일 시 보안 관련해서 에러가 발생-->
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
