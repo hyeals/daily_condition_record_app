@@ -17,11 +17,15 @@ public class Today {
     SimpleDateFormat yFormat = new SimpleDateFormat("yyyy", Locale.KOREA);
     // 날짜, 시간을 나타내려고 하는 포맷 지정
     SimpleDateFormat mFormat = new SimpleDateFormat("yyyy년 MM월 dd일", Locale.KOREA);
+    // API에 입력할 날짜 포맷 지정
+    SimpleDateFormat mApiFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
 
     // 년도 값
     String year = yFormat.format(date);
     // 날짜 값
     String time = mFormat.format(date);
+    // API에 넣을 날짜 값
+    String apiDate = mApiFormat.format(date);
 
 
     // 현재 요일 구하기
@@ -36,6 +40,8 @@ public class Today {
     public String getDate(){
         return time;
     }
+
+    public String ToApiDate(){ return apiDate; }
 
     public String getWeekDay(){
         return weekDay;
