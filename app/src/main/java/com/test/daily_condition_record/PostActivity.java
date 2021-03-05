@@ -68,14 +68,16 @@ public class PostActivity extends AppCompatActivity {
         dateTextView = findViewById(R.id.dateTextView);
         weekDayTextView = findViewById(R.id.weekDay);
 
-        button.setOnClickListener(new View.OnClickListener(
+        getWeatherInfo();
+
+        /*button.setOnClickListener(new View.OnClickListener(
         ) {
             @Override
             public void onClick(View v) {
                 Log.d("tag", "onClick");
                 getWeatherInfo();
             }
-        });
+        });*/
 
         //오늘 날짜 텍스트뷰에 받아오기
         dateTextView.setText(today.getDate());

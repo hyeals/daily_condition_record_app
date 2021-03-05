@@ -23,7 +23,7 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="api 결과 값 나옴"
+            android:text=""
             app:layout_constraintTop_toTopOf="@id/cView"
             android:layout_marginTop="10dp"
             app:layout_constraintEnd_toEndOf="parent"
