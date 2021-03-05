@@ -11,9 +11,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
+
+    // 년도 가져오는 클래스
+    Today today = new Today();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle("");
 
         TextView toolbar_Text = findViewById(R.id.toolbar_Text);
-        toolbar_Text.setText("년도 받아오기 ex: 2021");
+        toolbar_Text.setText(today.getYear());
         setSupportActionBar(toolbar);
 
     }
