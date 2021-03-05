@@ -67,9 +67,22 @@ public class PostActivity extends AppCompatActivity {
         textView = findViewById(R.id.textView);
         dateTextView = findViewById(R.id.dateTextView);
         weekDayTextView = findViewById(R.id.weekDay);
+        writeText = findViewById(R.id.writeText);
 
         getWeatherInfo();
 
+        // EditText 터치 시 이미지뷰를 포함하고 있는 layout 감추기
+        writeText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()){
+                    case MotionEvent.ACTION_DOWN: findViewById(R.id.cView).setVisibility(View.GONE);
+                }
+                return false;
+            }
+        });
+
+        // 버튼 터치시 -> 저장 이벤트 추가해야 함
         /*button.setOnClickListener(new View.OnClickListener(
         ) {
             @Override
@@ -84,12 +97,13 @@ public class PostActivity extends AppCompatActivity {
         // 오늘 요일 텍스트뷰에 받아오기
         weekDayTextView.setText(today.getWeekDay());
 
-        // editText 키보드 이외에 다른 곳 누르면 키보드 내려가게 하는 이벤트
+        // editText 키보드 이외에 다른 곳 누르면 키보드 내림과 동시에 이미지뷰를 포함하고 있는 레이아웃 나타내기
         findViewById(R.id.postActicity).setOnClickListener(new View.OnClickListener(
         ) {
             @Override
             public void onClick(View v) {
                 Log.d("Ltest", "layout touch event");
+                findViewById(R.id.cView).setVisibility(View.VISIBLE);
                 hideKeyboard();
             }
         });
