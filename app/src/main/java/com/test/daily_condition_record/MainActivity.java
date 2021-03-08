@@ -20,6 +20,9 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    // 년도 가져오는 클래스
+    Today today = new Today();
+
     private RecyclerAdapter adapter;
 
     @Override
@@ -31,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle("");
 
         TextView toolbar_Text = findViewById(R.id.toolbar_Text);
-        toolbar_Text.setText("년도 받아오기 ex: 2021");
+        toolbar_Text.setText(today.getYear());
         setSupportActionBar(toolbar);
 
         RecyclerView recyclerView1 = findViewById(R.id.recyclerView1);
