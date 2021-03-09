@@ -7,6 +7,8 @@ import java.util.Locale;
 
 public class Today {
 
+    // 참고 : https://nuggy875.tistory.com/7
+
     // 현재 시간 구하기
     long now = System.currentTimeMillis();
 
@@ -41,7 +43,9 @@ public class Today {
         return time;
     }
 
-    public String ToApiDate(){ return apiDate; }
+    public String ToApiDate(){
+        return apiDate;
+    }
 
     public String getWeekDay(){
         return weekDay;
