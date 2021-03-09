@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.test.daily_condition_record.Room.AppDatabase;
 import com.test.daily_condition_record.Room.User;
 
 import java.util.ArrayList;
@@ -95,6 +96,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
             key.setText(s);
             Title.setText(user.getTitle());
             description.setText(user.getDes());
+
+            itemView.setOnLongClickListener(v -> { // 리사이클러뷰의 아이템을 길게 누를 시 메모 삭제. (삭제할껀지 확인하는 절차 추가 필요함)
+                userData.remove(user);
+                AppDatabase.getInstance(itemView.getContext()).userDao().delete(user);
+
+                notifyDataSetChanged();
+                return false;
+            });
         }
     }
 

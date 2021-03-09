@@ -89,6 +89,12 @@ public class PostActivity extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.putExtra("refresh", REQUEST_CODE);
                 setResult(RESULT_OK, intent);
+
+                ///////onResume() 되기전에 업데이트 : https://mynamewoon.tistory.com/18 2번의 move()함수 시작/////////
+                Intent intent2 = new Intent(getApplicationContext(), MainActivity.class);
+                startActivityForResult(intent2, 1);
+                /////// https://mynamewoon.tistory.com/18 2번의 move()함수 끝/////////
+
                 finish();
             }
         });

@@ -59,6 +59,9 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView1.setAdapter(adapter);
 
+//        Intent intent = new Intent(getApplicationContext(), PostActivity.class);
+//        startActivityForResult(intent, 1);
+
     }
 
     //////// 상단 툴바 /////////
