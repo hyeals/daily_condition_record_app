@@ -53,7 +53,9 @@ public class PostActivity extends AppCompatActivity {
 
     // 메모에 사용
     private final int REQUEST_CODE = 200;
+    private View postActivity;
     private EditText writeText;
+    private TextView viewText;
     private TextView result; // 테스트용
     private AppDatabase db;
 
@@ -75,8 +77,11 @@ public class PostActivity extends AppCompatActivity {
         weekDayTextView = findViewById(R.id.weekDay);
 
         writeText = findViewById(R.id.writeText); // https://mynamewoon.tistory.com/15?category=833237에서 initialized 함수
+        viewText = findViewById(R.id.viewText);
         result = findViewById(R.id.result);
         db = AppDatabase.getInstance(this);
+
+        writeText.setVisibility(View.INVISIBLE);
 
         // 저장 버튼 터치시 -> 로컬 db(ROOM)에 저장 이벤트 발생. // https://mynamewoon.tistory.com/15?category=833237
         button.setOnClickListener(new View.OnClickListener() {
@@ -85,17 +90,20 @@ public class PostActivity extends AppCompatActivity {
                 db.userDao().insert(new User(writeText.getText().toString()));
                 result.setText(db.userDao().getAll().toString());
                 hideKeyboard(); // 저장버튼 클릭 -> 키보드 숨김.
+                writeText.setVisibility(View.INVISIBLE);
+                viewText.setVisibility(View.VISIBLE);
+                viewText.setText(writeText.getText());
 
                 Intent intent = new Intent();
                 intent.putExtra("refresh", REQUEST_CODE);
-                setResult(REQUEST_OK, intent);
+                //setResult(REQUEST_OK, intent);
                 finish();
             }
         });
 
         getWeatherInfo(); // (버튼이벤트 없이) 날씨 받아오기
 
-        // EditText 터치 시 이미지뷰를 포함하고 있는 layout 감추기
+        // viewText 터치 시 이미지뷰를 포함하고 있는 layout 감추기
         writeText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -105,6 +113,7 @@ public class PostActivity extends AppCompatActivity {
                 return false;
             }
         });
+
 
         //오늘 날짜 텍스트뷰에 받아오기
         dateTextView.setText(today.getDate());
@@ -132,7 +141,7 @@ public class PostActivity extends AppCompatActivity {
 
     ////// 상단 툴바 시작 //////
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu) { // 메뉴 생성
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu_toolbar, menu);
         return super.onCreateOptionsMenu(menu);
@@ -143,6 +152,11 @@ public class PostActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home: // 뒤로가기 버튼 ID
                 finish();
+
+            case R.id.edit: // 포스팅 수정
+                viewText.setVisibility(View.INVISIBLE);
+                writeText.setVisibility(View.VISIBLE);
+                writeText.setText(viewText.getText());
         }
         return super.onOptionsItemSelected(item);
     }
@@ -248,20 +262,20 @@ public class PostActivity extends AppCompatActivity {
 
             if(fcstValue_PTY.equals("0")){ // 강수 없음.
                 switch(fcstValue_SKY){ // 하늘 상태
-                    case "1": weather_result = "맑음";
-                    case "3": weather_result = "구름 많음";
-                    case "4": weather_result = "흐림!!!!!!!!!!";
+                    case "1": weather_result = "맑음"; break;
+                    case "3": weather_result = "구름 많음"; break;
+                    case "4": weather_result = "흐림"; break;
                 }
             }
             else{ // 강수 있다면,
                 switch (fcstValue_PTY){
-                    case "1": weather_result = "비";
-                    case "2": weather_result = "진눈깨비";
-                    case "3": weather_result = "눈";
-                    case "4": weather_result = "소나기";
-                    case "5": weather_result = "빗방울";
-                    case "6": weather_result = "빗방울 또는 눈날림";
-                    case "7": weather_result = "눈날림";
+                    case "1": weather_result = "비"; break;
+                    case "2": weather_result = "진눈깨비"; break;
+                    case "3": weather_result = "눈"; break;
+                    case "4": weather_result = "소나기"; break;
+                    case "5": weather_result = "빗방울"; break;
+                    case "6": weather_result = "빗방울 또는 눈날림"; break;
+                    case "7": weather_result = "눈날림"; break;
                 }
             }
 
