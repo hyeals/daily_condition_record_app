@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +18,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.test.daily_condition_record.Room.AppDatabase;
+import com.test.daily_condition_record.Room.User;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,8 +50,12 @@ public class PostActivity extends AppCompatActivity {
     TextView dateTextView;
     // 요일 TextView
     TextView weekDayTextView;
-    // editText
-    EditText writeText;
+
+    // 메모에 사용
+    private final int REQUEST_CODE = 200;
+    private EditText writeText;
+    private TextView result; // 테스트용
+    private AppDatabase db;
 
 
     @Override
@@ -61,11 +69,29 @@ public class PostActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-        Button button = findViewById(R.id.button);
+        Button button = findViewById(R.id.button); // 저장버튼
         textView = findViewById(R.id.textView);
         dateTextView = findViewById(R.id.dateTextView);
         weekDayTextView = findViewById(R.id.weekDay);
-        writeText = findViewById(R.id.writeText);
+
+        writeText = findViewById(R.id.writeText); // https://mynamewoon.tistory.com/15?category=833237에서 initialized 함수
+        result = findViewById(R.id.result);
+        db = AppDatabase.getInstance(this);
+
+        // 저장 버튼 터치시 -> 로컬 db(ROOM)에 저장 이벤트 발생. // https://mynamewoon.tistory.com/15?category=833237
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                db.userDao().insert(new User(writeText.getText().toString()));
+                result.setText(db.userDao().getAll().toString());
+                hideKeyboard(); // 저장버튼 클릭 -> 키보드 숨김.
+
+                Intent intent = new Intent();
+                intent.putExtra("refresh", REQUEST_CODE);
+                setResult(REQUEST_OK, intent);
+                finish();
+            }
+        });
 
         getWeatherInfo(); // (버튼이벤트 없이) 날씨 받아오기
 
@@ -79,16 +105,6 @@ public class PostActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-        // 버튼 터치시 -> 저장 이벤트 추가해야 함
-        /*button.setOnClickListener(new View.OnClickListener(
-        ) {
-            @Override
-            public void onClick(View v) {
-                Log.d("tag", "onClick");
-                getWeatherInfo();
-            }
-        });*/
 
         //오늘 날짜 텍스트뷰에 받아오기
         dateTextView.setText(today.getDate());
@@ -114,7 +130,7 @@ public class PostActivity extends AppCompatActivity {
         imm.hideSoftInputFromWindow(writeText.getWindowToken(), 0);
     }
 
-    ////// 상단 툴바 //////
+    ////// 상단 툴바 시작 //////
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
@@ -130,7 +146,7 @@ public class PostActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-    ////// 상단 툴바 //////
+    ////// 상단 툴바 끝 //////
 
     private void getWeatherInfo() {
         if (weatherTask != null) {

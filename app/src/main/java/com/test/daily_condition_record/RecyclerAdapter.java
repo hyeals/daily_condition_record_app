@@ -11,11 +11,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.test.daily_condition_record.Room.User;
+
 import java.util.ArrayList;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemViewHolder> {
 
-    ArrayList<Data> dataList = new ArrayList<Data>();
+    private ArrayList<User> userData = new ArrayList<>();
 
 
     @NonNull
@@ -32,7 +34,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
     // ViewHolder에 각각의 항목들을 바인딩시킴.
     @Override
     public void onBindViewHolder(@NonNull RecyclerAdapter.ItemViewHolder itemViewHolder, int position) {
-        itemViewHolder.onBind(dataList.get(position));
+        itemViewHolder.onBind(userData.get(position), position);
 
         itemViewHolder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,13 +49,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
     }
 
     @Override
-    public int getItemCount() {
-        return dataList.size();
+    public int getItemCount() { // 현재 몇개의 데이터가 있는지 반환.
+        return userData.size();
     }
 
-    // Data 객체(아이템) 을 하나씩 추가시킨다.
-    public void addItem(Data data) {
-        dataList.add(data);
+    // User 객체(아이템)를 하나씩 추가시킨다.
+    public void addItem(User user) {
+        userData.add(user);
+        notifyDataSetChanged(); // 담아주고나서 변경 사항을 알려주기 위해 사용.
     }
 
 
@@ -61,9 +64,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
     class ItemViewHolder extends RecyclerView.ViewHolder {
 
         private TextView Title;
-        private TextView Today_Weather;
-        private TextView Contents;
+        private TextView description;
         private ImageView Image;
+
+        private TextView key;
 
         public View mView; // 온클릭 이벤트에 사용
 
@@ -73,19 +77,19 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
             mView = itemView; // 온클릭 이벤트에 사용
 
             Title = itemView.findViewById(R.id.Title);
-            Today_Weather = itemView.findViewById(R.id.Today_Weather);
-            Contents = itemView.findViewById(R.id.Contents);
+            description = itemView.findViewById(R.id.Description);
             Image = itemView.findViewById(R.id.Image);
+
+            key = itemView.findViewById(R.id.key);
 
         }
 
         // 실제 데이터들을 1:1 대응하여 각각의 내부뷰에 바인딩시킨다.
-        void onBind(Data data) {
-            Title.setText(data.getTitle());
-            Today_Weather.setText(data.getToday_Weather());
-            Contents.setText(data.getContents());
-            //Image.setImageResource(data.getResId());
-
+        void onBind(User user, int position) {
+            String s = "" + (position + 1); // key값은 위에서 매개변수로 받아온 position 값을 이용, 1번 부터 번호를 시작하기 위해서 +1을 해주고 string형으로 바꿔서 textView에 넣어줌.
+            key.setText(s);
+            Title.setText(user.getTitle());
+            description.setText(user.getDes());
         }
     }
 

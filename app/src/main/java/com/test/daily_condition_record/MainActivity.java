@@ -14,6 +14,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.test.daily_condition_record.Room.AppDatabase;
+import com.test.daily_condition_record.Room.User;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     Today today = new Today();
 
     private RecyclerAdapter adapter;
+    private List<User> users; // 로컬DB에 저장되어 있는 값을 불러오기 위해 : https://mynamewoon.tistory.com/18
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,34 +46,23 @@ public class MainActivity extends AppCompatActivity {
         recyclerView1.setLayoutManager(linearLayoutManager);
 
         adapter = new RecyclerAdapter();
-        recyclerView1.setAdapter(adapter);
 
-        getData();
-    }
+        // 로컬DB에 저장되어있는 내용을 리사이클러뷰에 띄움.
+        // int size = AppDatabase.getInstance(this).userDao().getAll().size();
+        users = AppDatabase.getInstance(this).userDao().getAll(); // // getInstance 함수에 userDao 인터페이스 안에 존재하는 모든 데이터를 불러오는 getAll( ) 함수를 사용해
+        int size = users.size(); // size를 구함.
 
-    private void getData() {
-        List<String> titleList = Arrays.asList("너구리","안성탕면","삼양라면","신라면","튀김우동","짜파게티");
-        List<String> contentList = Arrays.asList("구수한 우동맛입니다.","션합니다.","제일 무난합니다.","마니 매워요~","피씨방에서는 쵝오","짜장라면입니다.");
-//        List<Integer> rsIdList = Arrays.asList(
-//                R.drawable.nuguri,R.drawable.an,
-//                R.drawable.sam,R.drawable.sin,R.drawable.woo,R.drawable.jja
-//        );
-
-        for (int i=0;i<6;i++) {
-            Data data = new Data();
-            data.setTitle(titleList.get(i));
-            data.setToday_Weather(contentList.get(i));
-            //data.setContents(rsIdList.get(i));
-
-            // adapter에 방금 만든 Data 객체를 추가해 넣는다.
-            adapter.addItem(data);
+        for (int i = 0; i <size; i++) { // size 크기만큼 adapter에 additems 함수를 통해 내용 하나하나 추가.
+            adapter.addItem(users.get(i));
+            System.out.println("####" + AppDatabase.getInstance(this).userDao().getAll().get(i));
         }
 
-        // adapter 내용의 값이 변경되었음을 알려준다. 이 함수를 쓰지않으면 data가 노출안된다.
-        // 다만, recyclerView1.setAdapter() 함수가 data를 추가시켜준 뒤에 호출되었다면 정상적으로  data 노출된다.
-        adapter.notifyDataSetChanged();
-    }
+        recyclerView1.setAdapter(adapter);
 
+        Intent intent = new Intent(getApplicationContext(), PostActivity.class);
+        startActivityForResult(intent, 1);
+
+    }
 
     //////// 상단 툴바 /////////
     @Override

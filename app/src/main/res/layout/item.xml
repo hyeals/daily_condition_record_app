@@ -10,7 +10,20 @@
     android:orientation="horizontal"
     android:padding="6dp">
 
+    <TextView
+        android:id="@+id/key"
+        android:text="key"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:includeFontPadding="false"
+        android:textColor="@android:color/black"
+        app:layout_constraintStart_toEndOf="@+id/Image"
+        app:layout_constraintBottom_toTopOf="@id/linearLayout"
+        android:layout_marginLeft="10dp">
+    </TextView>
+
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -33,18 +46,7 @@
             android:text="메모 제목" />
 
         <TextView
-            android:id="@+id/Today_Weather"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:maxLength="15"
-            android:maxLines="1"
-            android:text="오늘의 날씨" />
-
-        <TextView
-            android:id="@+id/Contents"
+            android:id="@+id/Description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
