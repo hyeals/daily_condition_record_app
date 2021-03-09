@@ -54,8 +54,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
     }
 
     // User 객체(아이템)를 하나씩 추가시킨다.
-    public void addItem(User user) {
+    public void addItem(User user) { // addItem()은 리사이클러뷰에 뿌릴 때 사용되는 함수
         userData.add(user);
+        notifyDataSetChanged(); // 담아주고나서 변경 사항을 알려주기 위해 사용.
+    }
+
+    public void addItems(ArrayList<User> users) { // addItems()는 리사이클러뷰에 뿌리기전에, 먼저 로컬 DB에 저장되어 있는 내용을 RecyclerAdapter.java에 만들어진 userData에 값을 담아 갱신해 주는 작업
+        userData = users;
         notifyDataSetChanged(); // 담아주고나서 변경 사항을 알려주기 위해 사용.
     }
 

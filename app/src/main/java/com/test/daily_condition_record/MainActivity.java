@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -17,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.test.daily_condition_record.Room.AppDatabase;
 import com.test.daily_condition_record.Room.User;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -48,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
         adapter = new RecyclerAdapter();
 
         // 로컬DB에 저장되어있는 내용을 리사이클러뷰에 띄움.
-        // int size = AppDatabase.getInstance(this).userDao().getAll().size();
         users = AppDatabase.getInstance(this).userDao().getAll(); // // getInstance 함수에 userDao 인터페이스 안에 존재하는 모든 데이터를 불러오는 getAll( ) 함수를 사용해
         int size = users.size(); // size를 구함.
 
@@ -58,9 +58,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         recyclerView1.setAdapter(adapter);
-
-        Intent intent = new Intent(getApplicationContext(), PostActivity.class);
-        startActivityForResult(intent, 1);
 
     }
 
@@ -82,6 +79,21 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
     //////// 상단 툴바 /////////
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 200) { // PostActivity.java의 REQUEST_CODE값
+            if(resultCode == RESULT_OK) {
+
+                // 리사이클러뷰 updatae
+                users = AppDatabase.getInstance(this).userDao().getAll();
+                adapter.addItems((ArrayList) users);
+            }
+
+        }
+    }
 
 }
 

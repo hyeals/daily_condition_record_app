@@ -52,7 +52,7 @@ public class PostActivity extends AppCompatActivity {
     TextView weekDayTextView;
 
     // 메모에 사용
-    private final int REQUEST_CODE = 200;
+    private final int REQUEST_CODE = 200; // 임의의 값으로 설정
     private EditText writeText;
     private TextView result; // 테스트용
     private AppDatabase db;
@@ -88,7 +88,7 @@ public class PostActivity extends AppCompatActivity {
 
                 Intent intent = new Intent();
                 intent.putExtra("refresh", REQUEST_CODE);
-                setResult(REQUEST_OK, intent);
+                setResult(RESULT_OK, intent);
                 finish();
             }
         });
@@ -248,20 +248,20 @@ public class PostActivity extends AppCompatActivity {
 
             if(fcstValue_PTY.equals("0")){ // 강수 없음.
                 switch(fcstValue_SKY){ // 하늘 상태
-                    case "1": weather_result = "맑음";
-                    case "3": weather_result = "구름 많음";
-                    case "4": weather_result = "흐림!!!!!!!!!!";
+                    case "1": weather_result = "맑음"; break;
+                    case "3": weather_result = "구름 많음"; break;
+                    case "4": weather_result = "흐림"; break;
                 }
             }
             else{ // 강수 있다면,
                 switch (fcstValue_PTY){
-                    case "1": weather_result = "비";
-                    case "2": weather_result = "진눈깨비";
-                    case "3": weather_result = "눈";
-                    case "4": weather_result = "소나기";
-                    case "5": weather_result = "빗방울";
-                    case "6": weather_result = "빗방울 또는 눈날림";
-                    case "7": weather_result = "눈날림";
+                    case "1": weather_result = "비"; break;
+                    case "2": weather_result = "진눈깨비"; break;
+                    case "3": weather_result = "눈"; break;
+                    case "4": weather_result = "소나기"; break;
+                    case "5": weather_result = "빗방울"; break;
+                    case "6": weather_result = "빗방울 또는 눈날림"; break;
+                    case "7": weather_result = "눈날림"; break;
                 }
             }
 
