@@ -4,15 +4,23 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+
+import com.test.daily_condition_record.Room.AppDatabase;
+import com.test.daily_condition_record.Room.User;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,9 +40,23 @@ public class PostActivity extends AppCompatActivity {
     private static final String WEATHER_URL = "http://apis.data.go.kr/1360000/VilageFcstInfoService/getVilageFcst";
     private static final String SERVICE_KEY = "Y7f%2FstE428Zaku8UJVA83CK2JHGsFa96LktLpWOZBkWmP4S3mmhewY2DxwxvYZ0H%2F7b4l3XCbOEOE1XLMdwDWA%3D%3D";
     // 신청하여 승인된 일반 인증키(UTF-8) 값
+
     WeatherInfoTask weatherTask;
-    //    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
     TextView textView;
+
+    // 오늘 날짜, 요일 가져오는 클래스
+    Today today = new Today();
+    // 날짜 TextView
+    TextView dateTextView;
+    // 요일 TextView
+    TextView weekDayTextView;
+
+    // 메모에 사용
+    private final int REQUEST_CODE = 200;
+    private EditText writeText;
+    private TextView result; // 테스트용
+    private AppDatabase db;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,18 +69,68 @@ public class PostActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-        Button button = findViewById(R.id.button);
+        Button button = findViewById(R.id.button); // 저장버튼
         textView = findViewById(R.id.textView);
+        dateTextView = findViewById(R.id.dateTextView);
+        weekDayTextView = findViewById(R.id.weekDay);
+
+        writeText = findViewById(R.id.writeText); // https://mynamewoon.tistory.com/15?category=833237에서 initialized 함수
+        result = findViewById(R.id.result);
+        db = AppDatabase.getInstance(this);
+
+        // 저장 버튼 터치시 -> 로컬 db(ROOM)에 저장 이벤트 발생. // https://mynamewoon.tistory.com/15?category=833237
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("tag", "onClick");
-                getWeatherInfo();
+                db.userDao().insert(new User(writeText.getText().toString()));
+                result.setText(db.userDao().getAll().toString());
+                hideKeyboard(); // 저장버튼 클릭 -> 키보드 숨김.
+
+                Intent intent = new Intent();
+                intent.putExtra("refresh", REQUEST_CODE);
+                setResult(REQUEST_OK, intent);
+                finish();
+            }
+        });
+
+        getWeatherInfo(); // (버튼이벤트 없이) 날씨 받아오기
+
+        // EditText 터치 시 이미지뷰를 포함하고 있는 layout 감추기
+        writeText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()){
+                    case MotionEvent.ACTION_DOWN: findViewById(R.id.cView).setVisibility(View.GONE);
+                }
+                return false;
+            }
+        });
+
+        //오늘 날짜 텍스트뷰에 받아오기
+        dateTextView.setText(today.getDate());
+        // 오늘 요일 텍스트뷰에 받아오기
+        weekDayTextView.setText(today.getWeekDay());
+
+        // editText(writeText) 키보드 이외에 다른 곳 누르면 키보드 내림과 동시에 이미지뷰를 포함하고 있는 레이아웃 나타내기
+        findViewById(R.id.postActicity).setOnClickListener(new View.OnClickListener(
+        ) {
+            @Override
+            public void onClick(View v) {
+                Log.d("Ltest", "layout touch event");
+                findViewById(R.id.cView).setVisibility(View.VISIBLE);
+                hideKeyboard();
             }
         });
     }
 
-    ////// 상단 툴바 //////
+    // 키보드 내리기 함수
+    public void hideKeyboard(){
+        writeText = findViewById(R.id.writeText);
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(writeText.getWindowToken(), 0);
+    }
+
+    ////// 상단 툴바 시작 //////
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
@@ -74,7 +146,7 @@ public class PostActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-    ////// 상단 툴바 //////
+    ////// 상단 툴바 끝 //////
 
     private void getWeatherInfo() {
         if (weatherTask != null) {
@@ -84,6 +156,7 @@ public class PostActivity extends AppCompatActivity {
         weatherTask.execute();
     }
 
+    // 기상청 날씨 API 연동 + 데이터 파싱
     private class WeatherInfoTask extends AsyncTask<String, String, String> {
         @Override
         protected String doInBackground(String... params) {
@@ -95,7 +168,7 @@ public class PostActivity extends AppCompatActivity {
                 urlBuilder.append("&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*페이지번호*/
                 urlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode("10", "UTF-8")); /*한 페이지 결과 수*/
                 urlBuilder.append("&" + URLEncoder.encode("dataType", "UTF-8") + "=" + URLEncoder.encode("JSON", "UTF-8")); /*요청자료형식(XML/JSON)Default: XML*/
-                urlBuilder.append("&" + URLEncoder.encode("base_date", "UTF-8") + "=" + URLEncoder.encode("20210302", "UTF-8")); /*21년 02월 26일발표*/
+                urlBuilder.append("&" + URLEncoder.encode("base_date", "UTF-8") + "=" + URLEncoder.encode(today.ToApiDate(), "UTF-8")); /*21년 02월 26일발표*/
                 urlBuilder.append("&" + URLEncoder.encode("base_time", "UTF-8") + "=" + URLEncoder.encode("0500", "UTF-8")); /*05시 발표*/
                 urlBuilder.append("&" + URLEncoder.encode("nx", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*예보지점 X 좌표값*/
                 urlBuilder.append("&" + URLEncoder.encode("ny", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*예보지점의 Y 좌표값*/
@@ -134,8 +207,13 @@ public class PostActivity extends AppCompatActivity {
             JSONObject parse_items = null;
             JSONArray parse_item = null;
             JSONObject data = null;
-            String category = null;
-            String fcstValue = null;
+            String category_SKY = "sky";
+            String fcstValue_SKY = null;
+            String category_PTY = "pty";
+            String fcstValue_PTY = null;
+
+            String weather_result = "?";
+
             try {
                 root = new JSONObject(sb.toString());
                 parse_response = root.getJSONObject("response");
@@ -145,7 +223,7 @@ public class PostActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            // item 리스트에서 PTY 데이터 가져오기
+            // item 리스트에서 SKY, PTY 데이터 가져오기
             for (int i = 0; i < 100; i++) {
                 try {
                     data = parse_item.getJSONObject(i);
@@ -153,16 +231,43 @@ public class PostActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 try {
-                    category = data.getString("category");
-                    fcstValue = data.getString("fcstValue");
+                    if(!category_SKY.equals("SKY")){ // SKY 파싱
+                        category_SKY = data.getString("category");
+                        fcstValue_SKY = data.getString("fcstValue");
+                    }
+
+                    if(!category_PTY.equals("PTY")){ // PTY 파싱
+                        category_PTY = data.getString("category");
+                        fcstValue_PTY = data.getString("fcstValue");
+                    }
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                if (category.equals("PTY")) break;
             }
-            return "category: " + category + " " + "fcstValue: " + fcstValue;
-            //-------------------- 기상청 JSON 데이터 파싱 끝 -----------------------//
+
+            if(fcstValue_PTY.equals("0")){ // 강수 없음.
+                switch(fcstValue_SKY){ // 하늘 상태
+                    case "1": weather_result = "맑음";
+                    case "3": weather_result = "구름 많음";
+                    case "4": weather_result = "흐림!!!!!!!!!!";
+                }
+            }
+            else{ // 강수 있다면,
+                switch (fcstValue_PTY){
+                    case "1": weather_result = "비";
+                    case "2": weather_result = "진눈깨비";
+                    case "3": weather_result = "눈";
+                    case "4": weather_result = "소나기";
+                    case "5": weather_result = "빗방울";
+                    case "6": weather_result = "빗방울 또는 눈날림";
+                    case "7": weather_result = "눈날림";
+                }
+            }
+
+            return weather_result;
         }
+        //-------------------- 기상청 JSON 데이터 파싱 끝 -----------------------//
 
         @Override
         protected void onPostExecute(String s) {
