@@ -3,6 +3,7 @@ package com.test.daily_condition_record;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
 
 import android.content.Context;
 import android.content.Intent;
@@ -32,7 +33,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-
+import java.util.List;
 
 
 public class PostActivity extends AppCompatActivity {
@@ -90,6 +91,7 @@ public class PostActivity extends AppCompatActivity {
                 db.userDao().insert(new User(writeText.getText().toString()));
                 result.setText(db.userDao().getAll().toString());
                 hideKeyboard(); // 저장버튼 클릭 -> 키보드 숨김.
+
                 writeText.setVisibility(View.INVISIBLE);
                 viewText.setVisibility(View.VISIBLE);
                 viewText.setText(writeText.getText());
