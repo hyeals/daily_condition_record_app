@@ -40,13 +40,6 @@ public class MainActivity extends AppCompatActivity {
     // 년도 가져오는 클래스
     Today today = new Today();
 
-    // GPS 가져오기
-    // [참고] https://developers.google.com/maps/documentation/android-sdk/location?hl=ko
-    // [참고] https://bbaktaeho-95.tistory.com/56
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1; // GPS 권한 검증 코드
-    private boolean PermissionDenied = false;
-
-
     public RecyclerAdapter adapter;
     private List<User> users; // 로컬DB에 저장되어 있는 값을 불러오기 위해 : https://mynamewoon.tistory.com/18
 
@@ -80,6 +73,9 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView1.setAdapter(adapter);
 
+        // GPS 가져오기
+        // [참고] https://developers.google.com/maps/documentation/android-sdk/location?hl=ko
+        // [참고] https://bbaktaeho-95.tistory.com/56
         enableLocation();
 
     }
