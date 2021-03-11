@@ -5,6 +5,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,11 +32,17 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    protected double now_longitude;
+    protected double now_latitude;
+    protected double now_altitude;
+
+
     // 년도 가져오는 클래스
     Today today = new Today();
 
     // GPS 가져오기
-    // https://developers.google.com/maps/documentation/android-sdk/location?hl=ko
+    // [참고] https://developers.google.com/maps/documentation/android-sdk/location?hl=ko
+    // [참고] https://bbaktaeho-95.tistory.com/56
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1; // GPS 권한 검증 코드
     private boolean PermissionDenied = false;
 
@@ -83,8 +90,15 @@ public class MainActivity extends AppCompatActivity {
                 == PackageManager.PERMISSION_GRANTED) {
 
             Log.d("gps", "can use gps");
-            // gps 위치 받아오는 메소드 생성
-            getLocation();
+            // gps 위치 받아오기
+            // 내 위치 검색
+            LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            //String provider = location.getProvider();
+
+            // 내 위치 가져오기
+            now_longitude = location.getLongitude(); // 경도
+            now_latitude = location.getLatitude(); // 위도
 
         } else {
             requestPermission();
@@ -92,13 +106,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // GPS 권한이 없을 경우, 권한 요청 메소드
-    void requestPermission(){
-        String [] permissions = {Manifest.permission.ACCESS_FINE_LOCATION};
+    void requestPermission() {
+        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION};
         ActivityCompat.requestPermissions(this, permissions, 2021);
-    }
-
-    void getLocation(){
-
     }
 
     @Override
@@ -106,7 +116,8 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(requestCode == 2021){
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                getLocation();
+                enableLocation();
+
             }else{
                 finish();
             }
@@ -125,7 +136,11 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.toolbar_plus_button: // 피드 추가 기능 버튼
+                // Intent intent = new Intent(this, PostActivity.class);
+                // startActivity(intent);
                 Intent intent = new Intent(this, PostActivity.class);
+                intent.putExtra("longtitude", now_longitude);
+                intent.putExtra("latitude", now_latitude);
                 startActivity(intent);
         }
         return super.onOptionsItemSelected(item);

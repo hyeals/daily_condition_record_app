@@ -52,6 +52,13 @@ public class PostActivity extends AppCompatActivity {
     // 요일 TextView
     TextView weekDayTextView;
 
+    // GPS 위경도 -> 좌표값으로 전환하는 계산을 하는 클래스
+    ConvGPS convGPS = new ConvGPS();
+    // GPS 위경도 -> 좌표값으로 전환하는 계산을 한 클래스의 리턴값을 받아오는 클래스
+    LatXLngY latXLngY = new LatXLngY();
+    double longtitude;
+    double latitude;
+
     // 메모에 사용
     private final int REQUEST_CODE = 200;
     private View postActivity;
@@ -132,6 +139,16 @@ public class PostActivity extends AppCompatActivity {
                 hideKeyboard();
             }
         });
+
+        Intent getIntent = getIntent();
+        longtitude = getIntent.getDoubleExtra("longtitude", 0);
+        latitude =  getIntent.getDoubleExtra("latitude", 0);
+
+        //latXLngY = convGPS.convertGRID_GPS(true, longtitude, latitude);
+
+        // GPS 가져오기 테스트
+        viewText.setText("longtitude: " + String.valueOf(longtitude) + "latitude: " + String.valueOf(latitude));
+
     }
 
     // 키보드 내리기 함수
