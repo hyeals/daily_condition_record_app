@@ -80,30 +80,35 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    // GPS 권한 검증
+    // GPS, 앨범 권한 검증
     private void enableLocation() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
+                == PackageManager.PERMISSION_GRANTED) { // GPS 권한 체크
 
-            Log.d("gps", "can use gps");
-            // gps 위치 받아오기
-            // 내 위치 검색
-            LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            //String provider = location.getProvider();
+            if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){ // 앨범 권한 체크
 
-            // 내 위치 가져오기
-            now_longitude = location.getLongitude(); // 경도
-            now_latitude = location.getLatitude(); // 위도
+                Log.d("gps", "can use gps");
+                // gps 위치 받아오기
+                // 내 위치 검색
+                LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+                Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                //String provider = location.getProvider();
+
+                // 내 위치 가져오기
+                now_longitude = location.getLongitude(); // 경도
+                now_latitude = location.getLatitude(); // 위도
+            }else{
+                requestPermission();
+            }
 
         } else {
             requestPermission();
         }
     }
 
-    // GPS 권한이 없을 경우, 권한 요청 메소드
+    // GPS or 앨범 권한이 없을 경우, 권한 요청 메소드
     void requestPermission() {
-        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION};
+        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_EXTERNAL_STORAGE};
         ActivityCompat.requestPermissions(this, permissions, 2021);
     }
 
@@ -111,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(requestCode == 2021){
-            if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+            if(grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED){
                 enableLocation();
 
             }else{
