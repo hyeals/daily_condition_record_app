@@ -7,8 +7,7 @@ public class ConvGPS {
     private boolean TO_GRID = true;
     private boolean TO_GPS = false;
 
-    public LatXLngY convertGRID_GPS(boolean mode, double lat_X, double lng_Y )
-    {
+    public LatXLngY convertGRID_GPS(boolean mode, double lat_X, double lng_Y ) {
         double RE = 6371.00877; // 지구 반경(km)
         double GRID = 5.0; // 격자 간격(km)
         double SLAT1 = 30.0; // 투영 위도1(degree)

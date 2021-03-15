@@ -52,10 +52,9 @@ public class PostActivity extends AppCompatActivity {
     // 요일 TextView
     TextView weekDayTextView;
 
-    // GPS 위경도 -> 좌표값으로 전환하는 계산을 하는 클래스
-    ConvGPS convGPS = new ConvGPS();
-    // GPS 위경도 -> 좌표값으로 전환하는 계산을 한 클래스의 리턴값을 받아오는 클래스
-    LatXLngY latXLngY = new LatXLngY();
+
+    ConvGPS convGPS = new ConvGPS(); // GPS 위경도 -> 좌표값으로 전환하는 계산을 하는 클래스
+    LatXLngY latXLngY = new LatXLngY(); // GPS 위경도 -> 좌표값으로 전환하는 계산을 한 클래스의 리턴값을 받아오는 클래스
     double longtitude;
     double latitude;
 
@@ -82,7 +81,7 @@ public class PostActivity extends AppCompatActivity {
         Button button = findViewById(R.id.button); // 저장버튼
         textView = findViewById(R.id.textView);
         dateTextView = findViewById(R.id.dateTextView);
-        weekDayTextView = findViewById(R.id.weekDay);
+        weekDayTextView = findViewById(R.id.weekDayTextView);
 
         writeText = findViewById(R.id.writeText); // https://mynamewoon.tistory.com/15?category=833237에서 initialized 함수
         viewText = findViewById(R.id.viewText);
@@ -141,9 +140,9 @@ public class PostActivity extends AppCompatActivity {
         });
 
         // GPS로 얻은 위경도 값 -> 좌표 값으로 변환
-        Intent getIntent = getIntent();
-        longtitude = getIntent.getDoubleExtra("longtitude", 0);
-        latitude =  getIntent.getDoubleExtra("latitude", 0);
+        Intent intent = getIntent();
+        longtitude = intent.getDoubleExtra("longtitude", 0);
+        latitude =  intent.getDoubleExtra("latitude", 0);
 
         latXLngY = convGPS.convertGRID_GPS(true, latitude, longtitude);
 
