@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
     protected double now_latitude;
     protected double now_altitude;
 
-
     // 년도 가져오는 클래스
     Today today = new Today();
 
