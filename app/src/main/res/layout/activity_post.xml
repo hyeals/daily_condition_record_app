@@ -79,6 +79,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cView"></EditText>
 
+    <TextView
+        android:id="@+id/viewText"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="top"
+        android:hint=""
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toTopOf="@id/cView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cView"></TextView>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cView2"
         android:layout_width="0dp"

@@ -3,6 +3,7 @@ package com.test.daily_condition_record;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
 
 import android.content.Context;
 import android.content.Intent;
@@ -32,7 +33,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-
+import java.util.List;
 
 
 public class PostActivity extends AppCompatActivity {
@@ -51,9 +52,18 @@ public class PostActivity extends AppCompatActivity {
     // 요일 TextView
     TextView weekDayTextView;
 
+    // GPS 위경도 -> 좌표값으로 전환하는 계산을 하는 클래스
+    ConvGPS convGPS = new ConvGPS();
+    // GPS 위경도 -> 좌표값으로 전환하는 계산을 한 클래스의 리턴값을 받아오는 클래스
+    LatXLngY latXLngY = new LatXLngY();
+    double longtitude;
+    double latitude;
+
     // 메모에 사용
-    private final int REQUEST_CODE = 200; // 임의의 값으로 설정
+    private final int REQUEST_CODE = 200;
+    private View postActivity;
     private EditText writeText;
+    private TextView viewText;
     private TextView result; // 테스트용
     private AppDatabase db;
 
@@ -75,8 +85,11 @@ public class PostActivity extends AppCompatActivity {
         weekDayTextView = findViewById(R.id.weekDay);
 
         writeText = findViewById(R.id.writeText); // https://mynamewoon.tistory.com/15?category=833237에서 initialized 함수
+        viewText = findViewById(R.id.viewText);
         result = findViewById(R.id.result);
         db = AppDatabase.getInstance(this);
+
+        writeText.setVisibility(View.INVISIBLE);
 
         // 저장 버튼 터치시 -> 로컬 db(ROOM)에 저장 이벤트 발생. // https://mynamewoon.tistory.com/15?category=833237
         button.setOnClickListener(new View.OnClickListener() {
@@ -86,22 +99,20 @@ public class PostActivity extends AppCompatActivity {
                 result.setText(db.userDao().getAll().toString());
                 hideKeyboard(); // 저장버튼 클릭 -> 키보드 숨김.
 
+                writeText.setVisibility(View.INVISIBLE);
+                viewText.setVisibility(View.VISIBLE);
+                viewText.setText(writeText.getText());
+
                 Intent intent = new Intent();
                 intent.putExtra("refresh", REQUEST_CODE);
-                setResult(RESULT_OK, intent);
-
-                ///////onResume() 되기전에 업데이트 : https://mynamewoon.tistory.com/18 2번의 move()함수 시작/////////
-                Intent intent2 = new Intent(getApplicationContext(), MainActivity.class);
-                startActivityForResult(intent2, 1);
-                /////// https://mynamewoon.tistory.com/18 2번의 move()함수 끝/////////
-
+                //setResult(REQUEST_OK, intent);
                 finish();
             }
         });
 
         getWeatherInfo(); // (버튼이벤트 없이) 날씨 받아오기
 
-        // EditText 터치 시 이미지뷰를 포함하고 있는 layout 감추기
+        // viewText 터치 시 이미지뷰를 포함하고 있는 layout 감추기
         writeText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -111,6 +122,7 @@ public class PostActivity extends AppCompatActivity {
                 return false;
             }
         });
+
 
         //오늘 날짜 텍스트뷰에 받아오기
         dateTextView.setText(today.getDate());
@@ -127,6 +139,17 @@ public class PostActivity extends AppCompatActivity {
                 hideKeyboard();
             }
         });
+
+        // GPS로 얻은 위경도 값 -> 좌표 값으로 변환
+        Intent getIntent = getIntent();
+        longtitude = getIntent.getDoubleExtra("longtitude", 0);
+        latitude =  getIntent.getDoubleExtra("latitude", 0);
+
+        latXLngY = convGPS.convertGRID_GPS(true, latitude, longtitude);
+
+        // GPS 가져오기 테스트
+        // viewText.setText("longtitude: " + String.valueOf(latXLngY.x) + "latitude: " + String.valueOf(latXLngY.y));
+
     }
 
     // 키보드 내리기 함수
@@ -138,7 +161,7 @@ public class PostActivity extends AppCompatActivity {
 
     ////// 상단 툴바 시작 //////
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu) { // 메뉴 생성
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu_toolbar, menu);
         return super.onCreateOptionsMenu(menu);
@@ -149,6 +172,11 @@ public class PostActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home: // 뒤로가기 버튼 ID
                 finish();
+
+            case R.id.edit: // 포스팅 수정
+                viewText.setVisibility(View.INVISIBLE);
+                writeText.setVisibility(View.VISIBLE);
+                writeText.setText(viewText.getText());
         }
         return super.onOptionsItemSelected(item);
     }
@@ -176,8 +204,8 @@ public class PostActivity extends AppCompatActivity {
                 urlBuilder.append("&" + URLEncoder.encode("dataType", "UTF-8") + "=" + URLEncoder.encode("JSON", "UTF-8")); /*요청자료형식(XML/JSON)Default: XML*/
                 urlBuilder.append("&" + URLEncoder.encode("base_date", "UTF-8") + "=" + URLEncoder.encode(today.ToApiDate(), "UTF-8")); /*21년 02월 26일발표*/
                 urlBuilder.append("&" + URLEncoder.encode("base_time", "UTF-8") + "=" + URLEncoder.encode("0500", "UTF-8")); /*05시 발표*/
-                urlBuilder.append("&" + URLEncoder.encode("nx", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*예보지점 X 좌표값*/
-                urlBuilder.append("&" + URLEncoder.encode("ny", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*예보지점의 Y 좌표값*/
+                urlBuilder.append("&" + URLEncoder.encode("nx", "UTF-8") + "=" + URLEncoder.encode(String.valueOf((int)latXLngY.x), "UTF-8")); /*예보지점 X 좌표값*/
+                urlBuilder.append("&" + URLEncoder.encode("ny", "UTF-8") + "=" + URLEncoder.encode(String.valueOf((int)latXLngY.y), "UTF-8")); /*예보지점의 Y 좌표값*/
                 //urlBuilder.append("&" + URLEncoder.encode("ftype", "UTF-8") + "=" + URLEncoder.encode("ODAM", "UTF-8")); /*파일구분 -ODAM: 동네예보실황 -VSRT: 동네예보초단기 -SHRT: 동네예보단기*/
                 //urlBuilder.append("&" + URLEncoder.encode("basedatetime", "UTF-8") + "=" + URLEncoder.encode("20210226050000", "UTF-8"));
 
