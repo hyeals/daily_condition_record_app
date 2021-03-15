@@ -148,4 +148,3 @@ public class MainActivity extends AppCompatActivity {
     //////// 상단 툴바 /////////
 
 }
-

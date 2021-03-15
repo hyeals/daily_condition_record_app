@@ -104,7 +104,7 @@ public class PostActivity extends AppCompatActivity {
         Button button = findViewById(R.id.button); // 저장버튼
         textView = findViewById(R.id.textView);
         dateTextView = findViewById(R.id.dateTextView);
-        weekDayTextView = findViewById(R.id.weekDay);
+        weekDayTextView = findViewById(R.id.weekDayTextView);
 
         writeText = findViewById(R.id.writeText); // https://mynamewoon.tistory.com/15?category=833237에서 initialized 함수
         viewText = findViewById(R.id.viewText);
