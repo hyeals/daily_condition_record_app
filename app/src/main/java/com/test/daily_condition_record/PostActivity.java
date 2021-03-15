@@ -197,6 +197,9 @@ public class PostActivity extends AppCompatActivity {
 
         latXLngY = convGPS.convertGRID_GPS(true, latitude, longitude);
 
+        Log.d("x좌표값:", String.valueOf((int)latXLngY.x));
+        Log.d("y좌표값:", String.valueOf((int)latXLngY.y));
+
         // GPS 가져오기 테스트
         // viewText.setText("longtitude: " + String.valueOf(latXLngY.x) + "latitude: " + String.valueOf(latXLngY.y));
 
@@ -283,7 +286,7 @@ public class PostActivity extends AppCompatActivity {
                 urlBuilder.append("&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*페이지번호*/
                 urlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode("10", "UTF-8")); /*한 페이지 결과 수*/
                 urlBuilder.append("&" + URLEncoder.encode("dataType", "UTF-8") + "=" + URLEncoder.encode("JSON", "UTF-8")); /*요청자료형식(XML/JSON)Default: XML*/
-                urlBuilder.append("&" + URLEncoder.encode("base_date", "UTF-8") + "=" + URLEncoder.encode(today.ToApiDate(), "UTF-8")); /*21년 02월 26일발표*/
+                urlBuilder.append("&" + URLEncoder.encode("base_date", "UTF-8") + "=" + URLEncoder.encode(today.ToApiDate(), "UTF-8")); /*ex)21년 02월 26일발표*/
                 urlBuilder.append("&" + URLEncoder.encode("base_time", "UTF-8") + "=" + URLEncoder.encode("0500", "UTF-8")); /*05시 발표*/
                 urlBuilder.append("&" + URLEncoder.encode("nx", "UTF-8") + "=" + URLEncoder.encode(String.valueOf((int)latXLngY.x), "UTF-8")); /*예보지점 X 좌표값*/
                 urlBuilder.append("&" + URLEncoder.encode("ny", "UTF-8") + "=" + URLEncoder.encode(String.valueOf((int)latXLngY.y), "UTF-8")); /*예보지점의 Y 좌표값*/
@@ -339,7 +342,7 @@ public class PostActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             // item 리스트에서 SKY, PTY 데이터 가져오기
-            for (int i = 0; i < 100; i++) {
+            for (int i = 0; i < 10; i++) {
                 try {
                     data = parse_item.getJSONObject(i);
                 } catch (JSONException e) {

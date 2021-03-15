@@ -43,6 +43,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
                 Context context = v.getContext();
                 Intent intent = new Intent(context, PostActivity.class);
 
+//                intent.putExtra("longtitude", now_longitude); // MainActivity.java에 있는 now_longitude, now_latitude값을 여기에서도 쓸 수 있게 변경해야 함.
+//                intent.putExtra("latitude", now_latitude);
+
                 context.startActivity(intent);
             }
         });
