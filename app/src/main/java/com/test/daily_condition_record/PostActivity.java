@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -165,6 +166,11 @@ public class PostActivity extends AppCompatActivity {
 
         getWeatherInfo(); // (버튼이벤트 없이) 날씨 받아오기
 
+        //오늘 날짜 텍스트뷰에 받아오기
+        dateTextView.setText(today.getDate());
+        // 오늘 요일 텍스트뷰에 받아오기
+        weekDayTextView.setText(today.getWeekDay());
+
         // viewText 터치 시 이미지뷰를 포함하고 있는 layout 감추기
         writeText.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -175,12 +181,6 @@ public class PostActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-
-        //오늘 날짜 텍스트뷰에 받아오기
-        dateTextView.setText(today.getDate());
-        // 오늘 요일 텍스트뷰에 받아오기
-        weekDayTextView.setText(today.getWeekDay());
 
         // editText(writeText) 키보드 이외에 다른 곳 누르면 키보드 내림과 동시에 이미지뷰를 포함하고 있는 레이아웃 나타내기
         findViewById(R.id.postActicity).setOnClickListener(new View.OnClickListener(
@@ -248,7 +248,7 @@ public class PostActivity extends AppCompatActivity {
 
     //// 앨범에서 이미지 가져오기 ////
     public void doTakeAlbumAction(){
-        Intent intent = new Intent(Intent.ACTION_PICK);
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT); // ACTION_GET_CONTENT <- ACTION_PICK 참고 : https://o-s-z.tistory.com/60
         intent.setType("image/*");
         startActivityForResult(intent, REQUEST_IMAGE_PICK);
     }
@@ -259,13 +259,16 @@ public class PostActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == REQUEST_IMAGE_PICK){
-            putPhoto.setImageURI(data.getData());
-            temp_img = data.getData().toString();
+            if(data == null) { // data가 null일때는 앨범에서 뒤로가기 눌렀을때 data가 없기때문에 생기는 오류를 잡아주기 위함. 참고 : https://namhandong.tistory.com/43
+            }
+            else {
+                putPhoto.setImageURI(data.getData());
+                temp_img = data.getData().toString(); // Uri(uri) -> Uri(String)으로 변경해서 temp_img변수에 저장.
 
-            // 이미지 선택하면 앨번선택 안내문구 안보이게 하기
-            guideTextView = findViewById(R.id.guideTextView);
-            guideTextView.setVisibility(View.GONE);
-
+                // 이미지 선택하면 앨번선택 안내문구 안보이게 하기
+                guideTextView = findViewById(R.id.guideTextView);
+                guideTextView.setVisibility(View.GONE);
+            }
         }
     }
 

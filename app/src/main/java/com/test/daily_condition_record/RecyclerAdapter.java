@@ -104,8 +104,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
 //            Title.setText(user.getTitle());
             Date_Weather.setText( user.getDate() +"("+user.getWeather()+")"); // Room DB로부터 date와 weather를 가져와 보여줌.
             description.setText(user.getDes()); // Room DB로부터 메모 내용을 가져와 보여줌.
-            Image.setImageURI(Uri.parse(user.getImg())); // Room DB로부터 이미지(Uri(String) → Uri(Uri)로 변경)를 가져옴.
 
+            if(user.getImg() == null) { // 만약 사용자가 PostActivity.java에서 아무 이미지도 선택하지 않고 저장을 눌렀다면(이렇게 null처리 안해주면 오류 발생),
+                Image.setImageResource(R.drawable.ic_android_black_24dp); // MainActivity.java의 리사이클러뷰 화면에 기본안드로이드이미지(검정)로 보여지게 변경.
+            }
+            else { // 만약 사용자가 PostActivity.java에서 이미지를 선택했다면,
+                Image.setImageURI(Uri.parse(user.getImg())); // Room DB로부터 이미지(Uri(String) → Uri(Uri)로 변경)를 가져옴.
+            }
 
             itemView.setOnLongClickListener(v -> { // 리사이클러뷰의 아이템을 길게 누를 시 메모 삭제. (삭제할껀지 확인하는 절차 추가 필요함)
                 userData.remove(user);

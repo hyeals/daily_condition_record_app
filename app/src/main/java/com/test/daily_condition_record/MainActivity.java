@@ -123,10 +123,10 @@ public class MainActivity extends AppCompatActivity {
                         100, // 통지사이의 최소 시간간격 (miliSecond)
                         1, // 통지사이의 최소 변경거리 (m)
                         mLocationListener);
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, // 등록할 위치제공자(NetWork)
-                        100, // 통지사이의 최소 시간간격 (miliSecond)
-                        1, // 통지사이의 최소 변경거리 (m)
-                        mLocationListener);
+//                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, // 등록할 위치제공자(NetWork)
+//                        100, // 통지사이의 최소 시간간격 (miliSecond)
+//                        1, // 통지사이의 최소 변경거리 (m)
+//                        mLocationListener);
 
 //                // 내 위치 가져오기(하단 LocationListener 함수로 이동)
 //                now_longitude = location.getLongitude(); // 경도
