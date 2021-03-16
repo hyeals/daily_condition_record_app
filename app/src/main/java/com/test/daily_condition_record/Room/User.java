@@ -8,12 +8,16 @@ public class User {
 
     //Room에서 자동으로 id를 할당
     @PrimaryKey(autoGenerate = true)
-    private int id;
-    private String title;
-    private String des;
+    private int id; // 할당 번호
+    private String title; // 메모 제목
+    private String des; // 메모 내용
+    private String weather; // 메모 날씨
+    private String img; // 이미지
 
-    public User(String des) {
+    public User(String des, String weather, String img) {
         this.des = des;
+        this.weather = weather;
+        this.img = img;
     }
 
     public int getId() {
@@ -40,8 +44,24 @@ public class User {
         this.title = title;
     }
 
+    public String getWeather() {
+        return weather;
+    }
+
+    public void setWeather(String weather) {
+        this.weather = weather;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
     @Override
     public String toString() {
-        return "User{" + "입력값(des)='" + des + '\'' + '}';
+        return "User{" + "입력값(des)='" + des + '\'' + weather + img + '}';
     }
 }

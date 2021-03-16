@@ -82,6 +82,8 @@ public class PostActivity extends AppCompatActivity {
     private TextView guideTextView;
     private TextView result; // 테스트용
     private AppDatabase db;
+    String temp_weather = null;
+    String temp_img = null;
 
     // 이미지 뷰에 사용
     // 참고 https://velog.io/@moontae/%EC%B9%B4%EB%A9%94%EB%9D%BC%EB%A5%BC-%EC%82%AC%EC%9A%A9%ED%95%98%EC%97%AC-%EC%82%AC%EC%A7%84%EC%B4%AC%EC%98%81-%EB%B0%8F-%EC%82%AC%EC%A7%84%EC%B2%A9%EC%97%90%EC%84%9C-%EC%9D%B4%EB%AF%B8%EC%A7%80-%EB%B6%88%EB%9F%AC%EC%98%A4%EA%B8%B0
@@ -102,13 +104,13 @@ public class PostActivity extends AppCompatActivity {
 
 
         Button button = findViewById(R.id.button); // 저장버튼
-        textView = findViewById(R.id.textView);
-        dateTextView = findViewById(R.id.dateTextView);
-        weekDayTextView = findViewById(R.id.weekDayTextView);
+        textView = findViewById(R.id.textView); // 날씨
+        dateTextView = findViewById(R.id.dateTextView); // 날짜
+        weekDayTextView = findViewById(R.id.weekDayTextView); // 요일
 
         writeText = findViewById(R.id.writeText); // https://mynamewoon.tistory.com/15?category=833237에서 initialized 함수
         viewText = findViewById(R.id.viewText);
-        result = findViewById(R.id.result);
+        result = findViewById(R.id.result); // 테스트용
         db = AppDatabase.getInstance(this);
 
         putPhoto = findViewById(R.id.putPhoto);
@@ -116,7 +118,7 @@ public class PostActivity extends AppCompatActivity {
         writeText.setVisibility(View.INVISIBLE);
 
         // 이미지 뷰 클릭시 앨범으로부터 사진 가져오기 기능
-        // 다이얼로그의 앨범선책, 취소 버튼 리스너 생성
+        // 다이얼로그의 앨범선택, 취소 버튼 리스너 생성
         DialogInterface.OnClickListener albumListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -138,7 +140,7 @@ public class PostActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db.userDao().insert(new User(writeText.getText().toString()));
+                db.userDao().insert(new User(writeText.getText().toString(), temp_weather, temp_img));
                 result.setText(db.userDao().getAll().toString());
                 hideKeyboard(); // 저장버튼 클릭 -> 키보드 숨김.
 
@@ -257,6 +259,7 @@ public class PostActivity extends AppCompatActivity {
 
         if(requestCode == REQUEST_IMAGE_PICK){
             putPhoto.setImageURI(data.getData());
+            temp_img = data.getData().toString();
 
             // 이미지 선택하면 앨번선택 안내문구 안보이게 하기
             guideTextView = findViewById(R.id.guideTextView);
@@ -391,6 +394,7 @@ public class PostActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             textView.setText(s);
+            temp_weather = s;
         }
     }
 
