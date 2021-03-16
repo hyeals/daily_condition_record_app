@@ -2,6 +2,7 @@ package com.test.daily_condition_record;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.test.daily_condition_record.Room.AppDatabase;
 import com.test.daily_condition_record.Room.User;
 
+import java.net.URI;
 import java.util.ArrayList;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemViewHolder> {
@@ -72,11 +74,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
     // RecyclerView 의 ViewHolder 만든다.
     class ItemViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView Title;
+//        private TextView Title;
         private TextView description;
         private ImageView Image;
 
-        private TextView key;
+//        private TextView key;
+        private TextView Date_Weather;
 
         public View mView; // 온클릭 이벤트에 사용
 
@@ -85,20 +88,24 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
 
             mView = itemView; // 온클릭 이벤트에 사용
 
-            Title = itemView.findViewById(R.id.Title);
+//            Title = itemView.findViewById(R.id.Title);
             description = itemView.findViewById(R.id.Description);
             Image = itemView.findViewById(R.id.Image);
 
-            key = itemView.findViewById(R.id.key);
+//            key = itemView.findViewById(R.id.key);
+            Date_Weather = itemView.findViewById(R.id.Date_Weather);
 
         }
 
         // 실제 데이터들을 1:1 대응하여 각각의 내부뷰에 바인딩시킨다.
         void onBind(User user, int position) {
-            String s = "" + (position + 1); // key값은 위에서 매개변수로 받아온 position 값을 이용, 1번 부터 번호를 시작하기 위해서 +1을 해주고 string형으로 바꿔서 textView에 넣어줌.
-            key.setText(s);
-            Title.setText(user.getTitle());
-            description.setText(user.getDes());
+//            String s = "" + (position + 1); // key값은 위에서 매개변수로 받아온 position 값을 이용, 1번 부터 번호를 시작하기 위해서 +1을 해주고 string형으로 바꿔서 textView에 넣어줌.
+//            key.setText(s);
+//            Title.setText(user.getTitle());
+            Date_Weather.setText( user.getDate() +"("+user.getWeather()+")"); // Room DB로부터 date와 weather를 가져와 보여줌.
+            description.setText(user.getDes()); // Room DB로부터 메모 내용을 가져와 보여줌.
+            Image.setImageURI(Uri.parse(user.getImg())); // Room DB로부터 이미지(Uri(String) → Uri(Uri)로 변경)를 가져옴.
+
 
             itemView.setOnLongClickListener(v -> { // 리사이클러뷰의 아이템을 길게 누를 시 메모 삭제. (삭제할껀지 확인하는 절차 추가 필요함)
                 userData.remove(user);
@@ -107,6 +114,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
                 notifyDataSetChanged();
                 return false;
             });
+
         }
     }
 

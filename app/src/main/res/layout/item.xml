@@ -10,63 +10,76 @@
     android:orientation="horizontal"
     android:padding="6dp">
 
-    <TextView
-        android:id="@+id/key"
-        android:text="key"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:includeFontPadding="false"
-        android:textColor="@android:color/black"
-        app:layout_constraintStart_toEndOf="@+id/Image"
-        app:layout_constraintBottom_toTopOf="@id/linearLayout"
-        android:layout_marginLeft="10dp">
-    </TextView>
+    <ImageView
+        android:id="@+id/Image"
+        android:layout_width="80dp"
+        android:layout_height="120dp"
+        android:src="@mipmap/ic_launcher"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/key"-->
+    <!--        android:text="key"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:includeFontPadding="false"-->
+    <!--        android:textColor="@android:color/black"-->
+    <!--        app:layout_constraintStart_toEndOf="@+id/Image"-->
+    <!--        app:layout_constraintBottom_toTopOf="@id/linearLayout"-->
+    <!--        android:layout_marginLeft="10dp">-->
+    <!--    </TextView>-->
+
 
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:layout_weight="1"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/Image"
         app:layout_constraintTop_toTopOf="parent">
 
-
         <TextView
-            android:id="@+id/Title"
-            android:layout_width="match_parent"
+            android:id="@+id/Date_Weather"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:maxLength="35"
-            android:maxLines="2"
-            android:text="메모 제목" />
+            android:layout_marginLeft="10dp"
+            android:includeFontPadding="false"
+            android:text="Date &amp; Weather"
+            android:textColor="@android:color/black"
+            app:layout_constraintBottom_toTopOf="@id/linearLayout"
+            app:layout_constraintStart_toEndOf="@+id/Image"></TextView>
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/Title"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_weight="2"-->
+        <!--            android:ellipsize="end"-->
+        <!--            android:gravity="center"-->
+        <!--            android:maxLength="35"-->
+        <!--            android:maxLines="2"-->
+        <!--            android:text="메모 제목" />-->
 
         <TextView
             android:id="@+id/Description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:ellipsize="end"
-            android:gravity="center"
+            android:gravity="left"
             android:maxLength="15"
             android:maxLines="1"
             android:text="메모 내용" />
 
     </LinearLayout>
-
-    <ImageView
-        android:id="@+id/Image"
-        android:layout_width="80dp"
-        android:layout_height="120dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:src="@mipmap/ic_launcher"/>
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

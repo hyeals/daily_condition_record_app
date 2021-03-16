@@ -82,6 +82,7 @@ public class PostActivity extends AppCompatActivity {
     private TextView guideTextView;
     private TextView result; // 테스트용
     private AppDatabase db;
+    String temp_date = today.getDate();
     String temp_weather = null;
     String temp_img = null;
 
@@ -140,7 +141,7 @@ public class PostActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db.userDao().insert(new User(writeText.getText().toString(), temp_weather, temp_img));
+                db.userDao().insert(new User(writeText.getText().toString(), temp_date ,temp_weather, temp_img));
                 result.setText(db.userDao().getAll().toString());
                 hideKeyboard(); // 저장버튼 클릭 -> 키보드 숨김.
 
