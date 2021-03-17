@@ -142,7 +142,7 @@ public class PostActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db.userDao().insert(new User(writeText.getText().toString(), temp_date ,temp_weather, temp_img));
+                db.userDao().insert(new User(writeText.getText().toString(), temp_date, temp_weather, temp_img));
                 result.setText(db.userDao().getAll().toString());
                 hideKeyboard(); // 저장버튼 클릭 -> 키보드 숨김.
 
@@ -164,7 +164,19 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
-        getWeatherInfo(); // (버튼이벤트 없이) 날씨 받아오기
+        /////////////////////////////////
+        String save_weather = null;
+        // 사용자가 클릭한 리사이클러뷰 하나의 개체에 담긴 날씨 정보.
+        Intent intent = getIntent();
+        save_weather = intent.getStringExtra("already_exist"); // +버튼이 아닌, 리사이클러뷰 아이템 클릭한건지 체크.
+        if(save_weather == null) { // 저장된 적이 없다면, (= 메인에서 +버튼 클릭시)
+            getWeatherInfo(); // (버튼이벤트 없이) 날씨 받아오기
+        }
+        else { // 이미 저장된 적이 있다면, (= 메인_리사이클러뷰에서 아이템 클릭시)
+            Log.d("이미 저장되어있는 것!! : ", save_weather);
+        }
+
+//        getWeatherInfo(); // (버튼이벤트 없이) 날씨 받아오기
 
         //오늘 날짜 텍스트뷰에 받아오기
         dateTextView.setText(today.getDate());
@@ -175,8 +187,9 @@ public class PostActivity extends AppCompatActivity {
         writeText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()){
-                    case MotionEvent.ACTION_DOWN: findViewById(R.id.cView).setVisibility(View.GONE);
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        findViewById(R.id.cView).setVisibility(View.GONE);
                 }
                 return false;
             }
@@ -195,13 +208,13 @@ public class PostActivity extends AppCompatActivity {
 
         // GPS로 얻은 위경도 값 -> 좌표 값으로 변환
         Intent getIntent = getIntent();
-        longitude = getIntent.getDoubleExtra("longtitude", 0);
-        latitude =  getIntent.getDoubleExtra("latitude", 0);
+        latitude = getIntent.getDoubleExtra("latitude", 0); // 위도
+        longitude = getIntent.getDoubleExtra("longtitude", 0); // 경도
 
         latXLngY = convGPS.convertGRID_GPS(true, latitude, longitude);
 
-        Log.d("x좌표값:", String.valueOf((int)latXLngY.x));
-        Log.d("y좌표값:", String.valueOf((int)latXLngY.y));
+        Log.d("x좌표값:", String.valueOf((int) latXLngY.x));
+        Log.d("y좌표값:", String.valueOf((int) latXLngY.y));
 
         // GPS 가져오기 테스트
         // viewText.setText("longtitude: " + String.valueOf(latXLngY.x) + "latitude: " + String.valueOf(latXLngY.y));
@@ -209,9 +222,9 @@ public class PostActivity extends AppCompatActivity {
     }
 
     // 키보드 내리기 함수
-    public void hideKeyboard(){
+    public void hideKeyboard() {
         writeText = findViewById(R.id.writeText);
-        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(writeText.getWindowToken(), 0);
     }
 
@@ -247,7 +260,7 @@ public class PostActivity extends AppCompatActivity {
     ////// 상단 툴바 끝 //////
 
     //// 앨범에서 이미지 가져오기 ////
-    public void doTakeAlbumAction(){
+    public void doTakeAlbumAction() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT); // ACTION_GET_CONTENT <- ACTION_PICK 참고 : https://o-s-z.tistory.com/60
         intent.setType("image/*");
         startActivityForResult(intent, REQUEST_IMAGE_PICK);
@@ -258,10 +271,9 @@ public class PostActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == REQUEST_IMAGE_PICK){
-            if(data == null) { // data가 null일때는 앨범에서 뒤로가기 눌렀을때 data가 없기때문에 생기는 오류를 잡아주기 위함. 참고 : https://namhandong.tistory.com/43
-            }
-            else {
+        if (requestCode == REQUEST_IMAGE_PICK) {
+            if (data == null) { // data가 null일때는 앨범에서 뒤로가기 눌렀을때 data가 없기때문에 생기는 오류를 잡아주기 위함. 참고 : https://namhandong.tistory.com/43
+            } else {
                 putPhoto.setImageURI(data.getData());
                 temp_img = data.getData().toString(); // Uri(uri) -> Uri(String)으로 변경해서 temp_img변수에 저장.
 
@@ -295,8 +307,8 @@ public class PostActivity extends AppCompatActivity {
                 urlBuilder.append("&" + URLEncoder.encode("dataType", "UTF-8") + "=" + URLEncoder.encode("JSON", "UTF-8")); /*요청자료형식(XML/JSON)Default: XML*/
                 urlBuilder.append("&" + URLEncoder.encode("base_date", "UTF-8") + "=" + URLEncoder.encode(today.ToApiDate(), "UTF-8")); /*ex)21년 02월 26일발표*/
                 urlBuilder.append("&" + URLEncoder.encode("base_time", "UTF-8") + "=" + URLEncoder.encode("0500", "UTF-8")); /*05시 발표*/
-                urlBuilder.append("&" + URLEncoder.encode("nx", "UTF-8") + "=" + URLEncoder.encode(String.valueOf((int)latXLngY.x), "UTF-8")); /*예보지점 X 좌표값*/
-                urlBuilder.append("&" + URLEncoder.encode("ny", "UTF-8") + "=" + URLEncoder.encode(String.valueOf((int)latXLngY.y), "UTF-8")); /*예보지점의 Y 좌표값*/
+                urlBuilder.append("&" + URLEncoder.encode("nx", "UTF-8") + "=" + URLEncoder.encode(String.valueOf((int) latXLngY.x), "UTF-8")); /*예보지점 X 좌표값*/
+                urlBuilder.append("&" + URLEncoder.encode("ny", "UTF-8") + "=" + URLEncoder.encode(String.valueOf((int) latXLngY.y), "UTF-8")); /*예보지점의 Y 좌표값*/
                 //urlBuilder.append("&" + URLEncoder.encode("ftype", "UTF-8") + "=" + URLEncoder.encode("ODAM", "UTF-8")); /*파일구분 -ODAM: 동네예보실황 -VSRT: 동네예보초단기 -SHRT: 동네예보단기*/
                 //urlBuilder.append("&" + URLEncoder.encode("basedatetime", "UTF-8") + "=" + URLEncoder.encode("20210226050000", "UTF-8"));
 
@@ -356,12 +368,12 @@ public class PostActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 try {
-                    if(!category_SKY.equals("SKY")){ // SKY 파싱
+                    if (!category_SKY.equals("SKY")) { // SKY 파싱
                         category_SKY = data.getString("category");
                         fcstValue_SKY = data.getString("fcstValue");
                     }
 
-                    if(!category_PTY.equals("PTY")){ // PTY 파싱
+                    if (!category_PTY.equals("PTY")) { // PTY 파싱
                         category_PTY = data.getString("category");
                         fcstValue_PTY = data.getString("fcstValue");
                     }
@@ -371,22 +383,41 @@ public class PostActivity extends AppCompatActivity {
                 }
             }
 
-            if(fcstValue_PTY.equals("0")){ // 강수 없음.
-                switch(fcstValue_SKY){ // 하늘 상태
-                    case "1": weather_result = "맑음"; break;
-                    case "3": weather_result = "구름 많음"; break;
-                    case "4": weather_result = "흐림"; break;
+            if (fcstValue_PTY.equals("0")) { // 강수 없음.
+                switch (fcstValue_SKY) { // 하늘 상태
+                    case "1":
+                        weather_result = "맑음";
+                        break;
+                    case "3":
+                        weather_result = "구름 많음";
+                        break;
+                    case "4":
+                        weather_result = "흐림";
+                        break;
                 }
-            }
-            else{ // 강수 있다면,
-                switch (fcstValue_PTY){
-                    case "1": weather_result = "비"; break;
-                    case "2": weather_result = "진눈깨비"; break;
-                    case "3": weather_result = "눈"; break;
-                    case "4": weather_result = "소나기"; break;
-                    case "5": weather_result = "빗방울"; break;
-                    case "6": weather_result = "빗방울 또는 눈날림"; break;
-                    case "7": weather_result = "눈날림"; break;
+            } else { // 강수 있다면,
+                switch (fcstValue_PTY) {
+                    case "1":
+                        weather_result = "비";
+                        break;
+                    case "2":
+                        weather_result = "진눈깨비";
+                        break;
+                    case "3":
+                        weather_result = "눈";
+                        break;
+                    case "4":
+                        weather_result = "소나기";
+                        break;
+                    case "5":
+                        weather_result = "빗방울";
+                        break;
+                    case "6":
+                        weather_result = "빗방울 또는 눈날림";
+                        break;
+                    case "7":
+                        weather_result = "눈날림";
+                        break;
                 }
             }
 

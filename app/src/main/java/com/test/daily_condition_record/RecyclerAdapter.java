@@ -3,6 +3,7 @@ package com.test.daily_condition_record;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,8 +46,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
                 Context context = v.getContext();
                 Intent intent = new Intent(context, PostActivity.class);
 
-//                intent.putExtra("longtitude", now_longitude); // MainActivity.java에 있는 now_longitude, now_latitude값을 여기에서도 쓸 수 있게 변경해야 함.
-//                intent.putExtra("latitude", now_latitude);
+                intent.putExtra("already_exist", "already_exist"); // 이미 저장한 적 있으면,
+                System.out.println("리사이클러뷰 아이템 클릭");
 
                 context.startActivity(intent);
             }

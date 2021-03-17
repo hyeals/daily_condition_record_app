@@ -210,8 +210,8 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.toolbar_plus_button: // 피드 추가 기능 버튼
                 Intent intent = new Intent(this, PostActivity.class);
-                intent.putExtra("longtitude", now_longitude);
-                intent.putExtra("latitude", now_latitude);
+                intent.putExtra("latitude", now_latitude); // 위도
+                intent.putExtra("longtitude", now_longitude); // 경도
 
                 tv.setText("위치정보 미수신중");
                 locationManager.removeUpdates(mLocationListener);  //  미수신할때는 반드시 자원해체를 해주어야 한다.

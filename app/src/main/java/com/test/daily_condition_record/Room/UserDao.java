@@ -24,6 +24,9 @@ public interface UserDao {
     @Query("SELECT * FROM memoTable")
     List<User> getAll();
 
+//    @Query("SELECT * FROM memoTable WHERE id = :id") // https://ondolroom.tistory.com/679
+//    List<User> getWeather1(int id); // https://velog.io/@ptm0304/Android-Room-database-%EC%82%AC%EC%9A%A9%ED%95%B4%EB%B3%B4%EA%B8%B0
+
     @Query("DELETE FROM memoTable")
     void deleteAll();
 
