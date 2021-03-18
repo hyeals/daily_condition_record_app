@@ -37,8 +37,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
-
-public class PostActivity extends AppCompatActivity {
+public class WriteActivity extends AppCompatActivity {
 
     private static final String WEATHER_URL = "http://apis.data.go.kr/1360000/VilageFcstInfoService/getVilageFcst";
     private static final String SERVICE_KEY = "Y7f%2FstE428Zaku8UJVA83CK2JHGsFa96LktLpWOZBkWmP4S3mmhewY2DxwxvYZ0H%2F7b4l3XCbOEOE1XLMdwDWA%3D%3D";
@@ -82,7 +81,7 @@ public class PostActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_post);
+        setContentView(R.layout.activity_write);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
@@ -122,6 +121,14 @@ public class PostActivity extends AppCompatActivity {
 
         // 앨범 다이얼로그 생성
         dialog = new AlertDialog.Builder(this).setTitle("업로드할 이미지 선택").setNeutralButton("취소", cancelListener).setNegativeButton("앨범 선택", albumListener);
+
+        // 이미지 뷰 눌렀을 때 앨범 선택 다이얼로그 뜨도록 하기
+        putPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.show();
+            }
+        });
 
         // 저장 버튼 터치시 -> 로컬 db(ROOM)에 저장 이벤트 발생. // https://mynamewoon.tistory.com/15?category=833237
         button.setOnClickListener(new View.OnClickListener() {
@@ -214,31 +221,11 @@ public class PostActivity extends AppCompatActivity {
     }
 
 
-    ////// 상단 툴바 시작 //////
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) { // 메뉴 생성
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu_toolbar, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home: // 뒤로가기 버튼 ID
                 finish();
-
-            case R.id.edit: // 포스팅 수정
-                viewText.setVisibility(View.INVISIBLE);
-                writeText.setVisibility(View.VISIBLE);
-                writeText.setText(viewText.getText());
-
-                putPhoto.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.show();
-                    }
-                });
         }
         return super.onOptionsItemSelected(item);
     }
