@@ -204,7 +204,7 @@ public class PostActivity extends AppCompatActivity {
 //        dateTextView.setText(item_date); // 저장된 날짜 텍스트뷰에 받아오기
         textView.setText(item_weather);
 //        weekDayTextView.setText(item_@@@); // 저장된 요일 텍스트뷰에 받아오기
-        viewText.setText(item_des+ position); // 저장된 메모 텍스트뷰에 받아오기
+        viewText.setText(item_des); // 저장된 메모 텍스트뷰에 받아오기
 
         if (item_img == null) { // 선택한 아이템에서, DB에 저장된 이미지가 없을 때(예외처리 해줘야 오류 안남.)
 
@@ -287,6 +287,8 @@ public class PostActivity extends AppCompatActivity {
                         dialog.show();
                     }
                 });
+//            case R.id.delete: // 포스팅 삭제 - PostActivity.java에서의 메모삭제는 추후에 진행.
+//                db.userDao().delete(position + 1); // (position + 1)을 해야 UserDao.java의 id와 맞음.
         }
         return super.onOptionsItemSelected(item);
     }

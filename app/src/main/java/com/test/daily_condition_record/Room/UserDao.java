@@ -25,6 +25,9 @@ public interface UserDao {
     @Delete
     void delete(User user);
 
+//    @Query("DELETE FROM memoTable WHERE user_id = :id")
+//    void delete(int id); // delete쿼리는 다음에
+
     @Query("SELECT * FROM memoTable")
     List<User> getAll();
 

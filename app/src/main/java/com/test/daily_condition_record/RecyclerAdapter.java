@@ -129,6 +129,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
                 Image.setImageURI(Uri.parse(user.getImg())); // Room DB로부터 이미지(Uri(String) → Uri(Uri)로 변경)를 가져옴.
             }
 
+            // PostActivity.java에서의 메모삭제는 추후에 진행.
             itemView.setOnLongClickListener(v -> { // 리사이클러뷰의 아이템을 길게 누를 시 메모 삭제. (삭제할껀지 확인하는 절차 추가 필요함)
                 userData.remove(user);
                 AppDatabase.getInstance(itemView.getContext()).userDao().delete(user);
