@@ -150,8 +150,9 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 //                db.userDao().insert(new User(writeText.getText().toString(), temp_date, temp_weather, temp_img));
-                db.userDao().update(item_weather, item_date, writeText.getText().toString(), item_img, position + 1); // (position + 1)을 해야 UserDao.java의 id와 맞음.
-                System.out.println("이미지 아이디!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+item_img);
+                db.userDao().update(item_weather, item_date, writeText.getText().toString(), temp_img, position + 1); // (position + 1)을 해야 UserDao.java의 id와 맞음.
+                System.out.println("이미지 아이디!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+temp_img); // temp_img는 사용자가 수정하기 위해 선택한 이미지.
+                System.out.println(db.userDao().getAll().toString());
                 result.setText(db.userDao().getAll().toString());
                 hideKeyboard(); // 저장버튼 클릭 -> 키보드 숨김.
 
