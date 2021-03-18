@@ -3,6 +3,7 @@ package com.test.daily_condition_record;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,7 +41,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
     public void onBindViewHolder(@NonNull RecyclerAdapter.ItemViewHolder itemViewHolder, int position) {
         itemViewHolder.onBind(userData.get(position), position);
 
-        itemViewHolder.mView.setOnClickListener(new View.OnClickListener() {
+        itemViewHolder.mView.setOnClickListener(new View  .OnClickListener() {
             @Override
             public void onClick(View v) {
                 Context context = v.getContext();
@@ -59,6 +60,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
                 intent.putExtra("item_des", item_des);
                 intent.putExtra("item_weather", item_weather);
                 intent.putExtra("item_img", item_img);
+                intent.putExtra("position", position); // 아이템 포지션 보내기 테스트
 
                 intent.putExtra("already_exist", "already_exist"); // 이미 저장한 적 있으면,
                 System.out.println("리사이클러뷰 아이템 클릭");

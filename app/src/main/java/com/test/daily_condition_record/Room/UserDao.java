@@ -18,6 +18,10 @@ public interface UserDao {
     @Update
     void update(User user);
 
+    // 참고 : https://mynamewoon.tistory.com/20
+    @Query("UPDATE memoTable SET user_weather = :weather, user_date = :date, user_des = :des, user_img = :img WHERE user_id = :id")
+    void update(String weather, String date, String des, String img, int id); // id는 사실 position임. ( position + 1을 해줘야 인덱스가 맞음.)
+
     @Delete
     void delete(User user);
 

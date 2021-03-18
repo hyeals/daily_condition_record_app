@@ -87,6 +87,13 @@ public class PostActivity extends AppCompatActivity {
     String temp_weather = null;
     String temp_img = null;
 
+    // DB에서 받아온 데이터들.
+    String item_date = null;
+    String item_des = null;
+    String item_weather = null;
+    String item_img = null;
+    int position;
+
     // 이미지 뷰에 사용
     // 참고 https://velog.io/@moontae/%EC%B9%B4%EB%A9%94%EB%9D%BC%EB%A5%BC-%EC%82%AC%EC%9A%A9%ED%95%98%EC%97%AC-%EC%82%AC%EC%A7%84%EC%B4%AC%EC%98%81-%EB%B0%8F-%EC%82%AC%EC%A7%84%EC%B2%A9%EC%97%90%EC%84%9C-%EC%9D%B4%EB%AF%B8%EC%A7%80-%EB%B6%88%EB%9F%AC%EC%98%A4%EA%B8%B0
     public AlertDialog.Builder dialog;
@@ -142,7 +149,9 @@ public class PostActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db.userDao().insert(new User(writeText.getText().toString(), temp_date, temp_weather, temp_img));
+//                db.userDao().insert(new User(writeText.getText().toString(), temp_date, temp_weather, temp_img));
+                db.userDao().update(item_weather, item_date, writeText.getText().toString(), item_img, position + 1); // (position + 1)을 해야 UserDao.java의 id와 맞음.
+                System.out.println("이미지 아이디!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+item_img);
                 result.setText(db.userDao().getAll().toString());
                 hideKeyboard(); // 저장버튼 클릭 -> 키보드 숨김.
 
@@ -185,21 +194,21 @@ public class PostActivity extends AppCompatActivity {
 //        weekDayTextView.setText(today.getWeekDay());
 
         Intent intent = getIntent();
-        String item_date = intent.getStringExtra("item_date");
-        String item_des = intent.getStringExtra("item_des");
-        String item_weather = intent.getStringExtra("item_weather");
-        String item_img = null;
+        item_date = intent.getStringExtra("item_date");
+        item_des = intent.getStringExtra("item_des");
+        item_weather = intent.getStringExtra("item_weather");
         item_img = intent.getStringExtra("item_img");
+        position = intent.getIntExtra("position", 100);
 
-        dateTextView.setText(item_date); // 저장된 날짜 텍스트뷰에 받아오기
+//        dateTextView.setText(item_date); // 저장된 날짜 텍스트뷰에 받아오기
         textView.setText(item_weather);
 //        weekDayTextView.setText(item_@@@); // 저장된 요일 텍스트뷰에 받아오기
-        viewText.setText(item_des); // 저장된 메모 텍스트뷰에 받아오기
+        viewText.setText(item_des+ position); // 저장된 메모 텍스트뷰에 받아오기
 
-        if (item_img == null) { // 선택한 아이템에서, 저장된 이미지가 없을 때
+        if (item_img == null) { // 선택한 아이템에서, DB에 저장된 이미지가 없을 때(예외처리 해줘야 오류 안남.)
 
         }
-        else { // 선택한 아이템에서, 저장된 이미지가 있을 때
+        else { // 선택한 아이템에서, DB에 저장된 이미지가 있을 때
             System.out.println(item_img + "이미지이미지이미지이미지이미지이미지");
             System.out.println(Uri.parse(item_img) + "ddddddddddddddddddddddd");
             putPhoto.setImageURI(Uri.parse(item_img)); // 저장된 이미지(string) 이미지뷰(uri)에 받아오기 // 참고 : https://hashcode.co.kr/questions/1080/string%EC%9D%84-uri%EB%A1%9C-%EB%B0%94%EA%BE%B8%EB%8A%94-%EB%B0%A9%EB%B2%95
@@ -242,6 +251,7 @@ public class PostActivity extends AppCompatActivity {
         // viewText.setText("longtitude: " + String.valueOf(latXLngY.x) + "latitude: " + String.valueOf(latXLngY.y));
 
     }
+
 
     // 키보드 내리기 함수
     public void hideKeyboard() {
