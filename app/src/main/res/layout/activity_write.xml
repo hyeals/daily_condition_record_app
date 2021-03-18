@@ -2,10 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/postActicity"
+    android:id="@+id/write_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PostActivity">
+    tools:context=".WriteActivity">
 
     <include
         android:id="@+id/toolbar"
@@ -92,17 +92,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cView"></EditText>
 
-    <TextView
-        android:id="@+id/viewText"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:gravity="top"
-        android:hint="작성한 메모"
-        android:scrollbars="vertical"
-        app:layout_constraintBottom_toTopOf="@id/cView2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cView"></TextView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cView2"

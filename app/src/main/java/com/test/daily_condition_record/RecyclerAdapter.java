@@ -46,6 +46,20 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
                 Context context = v.getContext();
                 Intent intent = new Intent(context, PostActivity.class);
 
+                String item_date = userData.get(position).getDate(); // 클릭한 아이템의 저장된 날짜
+                String item_des = userData.get(position).getDes(); // 클릭한 아이템의 저장된 메모내용
+                String item_weather = userData.get(position).getWeather(); // 클릭한 아이템의 저장된 날씨
+                String item_img = userData.get(position).getImg(); // 클릭한 아이템의 저장된 이미지
+                Log.d("클릭한 아이템의 저장된 날짜", "" + item_date);
+                Log.d("클릭한 아이템의 저장된 메모내용", "" + item_des);
+                Log.d("클릭한 아이템의 저장된 날씨", "" + item_weather);
+                Log.d("클릭한 아이템의 저장된 이미지", "" + item_img);
+
+                intent.putExtra("item_date", item_date);
+                intent.putExtra("item_des", item_des);
+                intent.putExtra("item_weather", item_weather);
+                intent.putExtra("item_img", item_img);
+
                 intent.putExtra("already_exist", "already_exist"); // 이미 저장한 적 있으면,
                 System.out.println("리사이클러뷰 아이템 클릭");
 

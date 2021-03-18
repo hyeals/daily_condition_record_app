@@ -209,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.toolbar_plus_button: // 피드 추가 기능 버튼
-                Intent intent = new Intent(this, PostActivity.class);
+                Intent intent = new Intent(this, WriteActivity.class);
                 intent.putExtra("latitude", now_latitude); // 위도
                 intent.putExtra("longtitude", now_longitude); // 경도
 
