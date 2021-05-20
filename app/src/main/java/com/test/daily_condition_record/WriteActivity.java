@@ -40,7 +40,7 @@ import java.net.URLEncoder;
 public class WriteActivity extends AppCompatActivity {
 
     private static final String WEATHER_URL = "http://apis.data.go.kr/1360000/VilageFcstInfoService/getVilageFcst";
-    private static final String SERVICE_KEY = "Y7f%2FstE428Zaku8UJVA83CK2JHGsFa96LktLpWOZBkWmP4S3mmhewY2DxwxvYZ0H%2F7b4l3XCbOEOE1XLMdwDWA%3D%3D";
+    private static final String SERVICE_KEY = "신청하여 승인된 일반 인증키(UTF-8) 값";
     // 신청하여 승인된 일반 인증키(UTF-8) 값
 
     WeatherInfoTask weatherTask;
